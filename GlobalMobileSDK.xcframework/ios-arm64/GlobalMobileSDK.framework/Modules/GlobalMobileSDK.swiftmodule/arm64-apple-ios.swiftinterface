@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.3.2 (swiftlang-1200.0.45 clang-1200.0.32.28)
+// swift-compiler-version: Apple Swift version 5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)
 // swift-module-flags: -target arm64-apple-ios11.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name GlobalMobileSDK
 import AVFoundation
 import GlobalMobileSDK_Private.BBPOS
@@ -64,7 +64,7 @@ public struct ProcessSaF : GlobalMobileSDK.Transaction {
   }
 }
 public enum TransactionError : Swift.Error {
-  case gatewayNotConfigured, terminalNotConfigured, bluetoothNotSupported, bluetoothPermissionNotGranted, bluetoothDisabled, bluetoothConnectionLost, devicePoweredOff, cardNotRemoved, terminalNotConnnected, transactionNotInProgress, transactionNotSupported, transactionInProgress, transactionFailed(message: Swift.String), terminalFailed(message: Swift.String, errorCode: Swift.Int = 0), missingRequiredValue(message: Swift.String), gatewayPermissionFailled(message: Swift.String), gatewayFailure(message: Swift.String, errorCode: Swift.Int = 0)
+  case gatewayNotConfigured, terminalNotConfigured, bluetoothNotSupported, bluetoothPermissionNotGranted, bluetoothDisabled, bluetoothConnectionLost, devicePoweredOff, cardNotRemoved, terminalNotConnnected, transactionNotInProgress, transactionNotSupported, transactionInProgress, transactionFailed(message: Swift.String), safTransactionFailed(message: Swift.String, transactionID: Foundation.UUID?), terminalFailed(message: Swift.String, errorCode: Swift.Int = 0), missingRequiredValue(message: Swift.String), gatewayPermissionFailed(message: Swift.String), gatewayFailure(message: Swift.String, errorCode: Swift.Int = 0)
 }
 @objc public enum ReversalReason : Swift.Int, Swift.CaseIterable, Swift.Codable {
   case undefined, voidedByCustomer, deviceTimeOut, deviceUnavailable, partialReversal, prematureChipRemoval, chipDeclined
@@ -100,6 +100,7 @@ public enum TransactionError : Swift.Error {
   public func postalCode(postalCode: Swift.String)
   public func select(aid: GlobalMobileSDK.AID)
   public func cancelTransaction()
+  public func deleteSafTransaction()
   @objc deinit
 }
 extension GMSManager : GlobalMobileSDK.SearchDelegate {
@@ -743,8 +744,8 @@ public struct PorticoConfig : GlobalMobileSDK.GatewayConfig, Swift.Equatable {
   public var terminalType: GlobalMobileSDK.TerminalType
   public init?(username: Swift.String, password: Swift.String, siteId: Swift.String, deviceId: Swift.String, licenseId: Swift.String, developerId: Swift.String, versionNumber: Swift.String, merchantName: Swift.String, merchantAddress: Swift.String, merchantNumber: Swift.String, signatureAgreement: Swift.String, aknowledgement: Swift.String, environment: GlobalMobileSDK.GatewayEnvironment)
   public init(_ secretApiKey: Swift.String, merchantName: Swift.String, merchantAddress: Swift.String, merchantNumber: Swift.String, signatureAgreement: Swift.String, acknowledgement: Swift.String, environment: GlobalMobileSDK.GatewayEnvironment)
-  public init(from decoder: Swift.Decoder) throws
   public static func == (a: GlobalMobileSDK.PorticoConfig, b: GlobalMobileSDK.PorticoConfig) -> Swift.Bool
+  public init(from decoder: Swift.Decoder) throws
   public func encode(to encoder: Swift.Encoder) throws
 }
 public struct TransITConfig : GlobalMobileSDK.GatewayConfig, Swift.Equatable {
@@ -1023,8 +1024,8 @@ public struct PropayConfig : GlobalMobileSDK.GatewayConfig, Swift.Equatable {
   public var supportedTerminals: GlobalMobileSDK.PropayConfig.Terminals
   public init?(username: Swift.String, password: Swift.String, pin: Swift.String, developerId: Swift.String, timeout: Swift.Int32, isDebug: Swift.Bool, environment: GlobalMobileSDK.GatewayEnvironment)
   public init?(pinToken: Swift.String?, sessionToken: Swift.String, environment: GlobalMobileSDK.GatewayEnvironment, isDebug: Swift.Bool, timeOut: Swift.Int32)
-  public init(from decoder: Swift.Decoder) throws
   public static func == (a: GlobalMobileSDK.PropayConfig, b: GlobalMobileSDK.PropayConfig) -> Swift.Bool
+  public init(from decoder: Swift.Decoder) throws
   public func encode(to encoder: Swift.Encoder) throws
 }
 public struct Address : Swift.Codable, Swift.Equatable {
@@ -1298,7 +1299,7 @@ extension GatewayConfig {
   }
 }
 public enum EntryMode : Swift.String, Swift.CaseIterable, Swift.Codable {
-  case msr, msrFallback, contact, contactless, manual, quickChip, token
+  case msr, chipFallback, contact, contactless, manual, quickChip, token
   public typealias RawValue = Swift.String
   public typealias AllCases = [GlobalMobileSDK.EntryMode]
   public static var allCases: [GlobalMobileSDK.EntryMode] {

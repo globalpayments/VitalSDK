@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "VitalSDK"
-  s.version      = "1.0.3"
+  s.version      = "1.0.4"
   s.summary      = "Mobile Device Framework"
   s.description  = <<-DESC
   Mobile Device Framework used to integrate EMV readers in applications
@@ -13,8 +13,4 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '9.0'
   s.dependency 'GlobalPaymentsApi'
   s.dependency 'BBPOS'
-  s.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-  }
-  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 end

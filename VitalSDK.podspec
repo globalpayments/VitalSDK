@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "VitalSDK"
-  s.version      = "1.2.2-beta3"
+  s.version      = "1.2.2"
   s.summary      = "Mobile Device Framework"
   s.description  = <<-DESC
   Mobile Device Framework used to integrate EMV readers in applications
